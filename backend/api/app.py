@@ -18,7 +18,8 @@ stream_task = None
 
 
 async def handle_price(symbol, price):
-    for event in engine.on_price(symbol, price):
+    events = engine.on_price(symbol, price)
+    for event in events:
         store.log_event(event)
     if events:
         store.save_state(engine.snapshot())
