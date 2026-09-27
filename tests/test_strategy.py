@@ -29,6 +29,7 @@ def test_entry_and_pre_entry_movement_do_not_sl():
 
 def test_btc_partial_and_trailing():
     e = StrategyEngine(10000)
+    e.on_price("BTCUSDT", 87456)
     e.on_price("BTCUSDT", 87550)
     events = e.on_price("BTCUSDT", 87950)
     assert any(x["type"] == "PARTIAL_EXIT" for x in events)
@@ -39,5 +40,6 @@ def test_btc_partial_and_trailing():
 
 def test_eth_stop_is_entry_based():
     e = StrategyEngine(10000)
+    e.on_price("ETHUSDT", 3256)
     e.on_price("ETHUSDT", 3305)
     assert e.positions["ETHUSDT"].stop == 3295

@@ -73,6 +73,16 @@ class StrategyEngine:
             s, d = k.split("|", 1)
             self.daily_counts[(s, d)] = int(n)
 
+    def rollback_entry(self, symbol: str):
+        """Remove a newly-created entry after an execution-layer failure."""
+        pos = self.positions.pop(symbol, None)
+        if pos is None:
+            return
+        key = (symbol, self._day())
+        current = self.daily_counts.get(key, 0)
+        self.daily_counts[key] = max(0, current - 1)
+        self.armed_levels[symbol] = None
+
     def on_price(self, symbol: str, price: float):
         cfg: SymbolConfig = SYMBOLS[symbol]
         self.last_prices[symbol] = price
@@ -99,7 +109,7 @@ class StrategyEngine:
                     pos.qty -= partial_qty
                     pos.realized_pnl += pnl
                     pos.partial_closed = True
-                    events.append({"type": "PARTIAL_EXIT", "symbol": symbol, "price": price, "qty": partial_qty, "pnl": pnl})
+                    events.append({"type": "PARTIAL_EXIT", "symbol": symbol, "side": pos.side, "price": price, "qty": partial_qty, "pnl": pnl})
 
             # A newly advanced trailing stop becomes active for the NEXT price
             # update. This prevents the bot from raising a stop to the current

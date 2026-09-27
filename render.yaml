@@ -12,3 +12,9 @@ services:
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
+      - key: DELTA_DEMO_ENABLED
+        value: "false"
+      - key: DELTA_DEMO_API_KEY
+        sync: false
+      - key: DELTA_DEMO_API_SECRET
+        sync: false

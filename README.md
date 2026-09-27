@@ -52,3 +52,17 @@ Never commit the service-role key to GitHub.
 ## Before live trading
 
 This version deliberately has no live-order code. Fees, slippage, exchange-specific contract rules, minimum quantities, leverage, liquidation behavior, and order acknowledgements must be tested and explicitly configured before any live integration.
+
+
+## Delta India Demo execution
+
+The project includes an explicit Delta India Testnet executor. It is OFF by default.
+
+Required Render environment variables:
+- `DELTA_DEMO_ENABLED=false` (leave false until the API key/IP whitelist is verified)
+- `DELTA_DEMO_API_KEY`
+- `DELTA_DEMO_API_SECRET`
+
+The executor hard-codes the Delta India Demo/Testnet REST host `https://cdn-ind.testnet.deltaex.org` and refuses a production base URL. It uses BTCUSD/ETHUSD product metadata to convert the bot's 5% notional allocation into integer Delta contracts.
+
+The strategy remains paper-accounting-first. Delta responses are recorded on ENTRY/PARTIAL_EXIT/EXIT events.
